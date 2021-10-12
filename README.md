@@ -12,6 +12,13 @@
 composer require silverstripe/userguide
 ```
 
+## Usage
+```
+Page:
+  extensions:
+    - Silverstripe\UserGuide\Model\UserGuideExtension
+```
+
 ## License
 See [License](license.md)
 
