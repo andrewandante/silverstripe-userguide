@@ -67,6 +67,5 @@ class LinkUserGuides extends BuildTask
                 $guide->write();
             }
         }
-
     }
 }

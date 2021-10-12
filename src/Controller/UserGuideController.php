@@ -8,6 +8,5 @@ class UserGuideController extends Controller
 {
     public function init()
     {
-
     }
 }
