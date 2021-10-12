@@ -22,7 +22,7 @@ class UserGuideExtension extends DataExtension
                         'UserGuidePreNotes',
                         'User Guide Pre-Content',
                         $userguide->PreNotes
-                    ),
+                    )->setRows(10),
                     HTMLEditorField::create(
                         'UserGuideContent',
                         'User Guide Content',
@@ -32,7 +32,7 @@ class UserGuideExtension extends DataExtension
                         'UserGuidePostContent',
                         'User Guide Post-Content',
                         $userguide->PostNotes
-                    ),
+                    )->setRows(10),
                 ]
             );
         }

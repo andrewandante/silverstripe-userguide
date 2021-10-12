@@ -33,6 +33,9 @@ class UserGuide extends DataObject
             'DerivedClass',
         ]);
 
+        $fields->dataFieldByName('PreNotes')->setRows(10);
+        $fields->dataFieldByName('PostNotes')->setRows(10);
+
         return $fields;
     }
 }
