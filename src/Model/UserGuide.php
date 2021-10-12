@@ -11,5 +11,6 @@ class UserGuide extends DataObject
         'PreNotes' => 'HTMLText',
         'Content' => 'HTMLText',
         'PostNotes' => 'HTMLText',
+        'MarkdownPath' => 'Varchar',
     ];
 }
