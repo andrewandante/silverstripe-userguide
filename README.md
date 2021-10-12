@@ -16,7 +16,7 @@ composer require silverstripe/userguide
 ```
 Page:
   extensions:
-    - Silverstripe\UserGuide\Model\UserGuideExtension
+    - SilverStripe\UserGuide\Extension\UserGuideExtension
 ```
 
 ## License

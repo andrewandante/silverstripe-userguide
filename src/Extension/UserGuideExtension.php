@@ -1,6 +1,6 @@
 <?php
 
-namespace Silverstripe\UserGuide\Model;
+namespace SilverStripe\UserGuide\Extension;
 
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
