@@ -5,6 +5,7 @@ namespace SilverStripe\UserGuide\Task;
 use Parsedown;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use RecursiveRegexIterator;
 use RegexIterator;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
@@ -25,7 +26,7 @@ class LinkUserGuides extends BuildTask
         // Find all .md files in the Guide Directory
         $directoryIterator = new RecursiveDirectoryIterator($guideDirectory);
         $iterator = new RecursiveIteratorIterator($directoryIterator);
-        $files = new RegexIterator($iterator, '/^.+\.md$/i', \RecursiveRegexIterator::GET_MATCH);
+        $files = new RegexIterator($iterator, '/^.+\.md$/i', RecursiveRegexIterator::GET_MATCH);
 
         foreach ($files as $file) {
             $generateHTML = false;
