@@ -1,0 +1,12 @@
+---
+Name: userguide
+---
+SilverStripe\CMS\Controllers\CMSMain:
+  extensions:
+    - SilverStripe\UserGuide\Extension\CMSMainExtension
+
+SilverStripe\Admin\LeftAndMain:
+  extra_requirements_javascript:
+    - 'silverstripe/userguide: client/dist/js/bundle.js'
+  extra_requirements_css:
+    - 'silverstripe/userguide: client/dist/styles/bundle.css'
