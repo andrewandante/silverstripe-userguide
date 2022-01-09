@@ -2,17 +2,18 @@
 
 namespace SilverStripe\UserGuide\Controller;
 
-use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\CMS\Controllers\CMSMain;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\UserGuide\Model\UserGuide;
 use Page;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 
 class CMSUserGuideController extends CMSMain
 {
-
     private static string $url_segment = 'pages/guide';
 
     private static string $url_rule = '/$Action/$ID/$OtherID';
@@ -24,6 +25,18 @@ class CMSUserGuideController extends CMSMain
     private static $allowed_actions = [
         'markdown',
     ];
+
+
+    public function getEditForm($id = null, $fields = null)
+    {
+        $id = $this->currentPageID();
+        $page = Page::get_by_id($id);
+        $userguides = UserGuide::get()->filter('DerivedClass', $page->ClassName);
+        $fieldList = FieldList::create(
+            GridField::create('Userguides', 'User guides', $userguides, GridFieldConfig_RecordViewer::create())
+        );
+        return parent::getEditForm($id, $fieldList);
+    }
 
     public function getTabIdentifier(): string
     {
@@ -51,5 +64,4 @@ class CMSUserGuideController extends CMSMain
 
         return $response;
     }
-
 }

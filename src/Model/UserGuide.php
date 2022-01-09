@@ -25,15 +25,18 @@ class UserGuide extends DataObject
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+
+        $fields->removeByName([
+            'PreNotes',
+            'PostNotes'
+        ]);
+
         $fields->makeFieldReadonly([
             'Title',
             'Content',
             'MarkdownPath',
             'DerivedClass',
         ]);
-
-        $fields->dataFieldByName('PreNotes')->setRows(10);
-        $fields->dataFieldByName('PostNotes')->setRows(10);
 
         return $fields;
     }

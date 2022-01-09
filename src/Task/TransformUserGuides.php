@@ -2,6 +2,7 @@
 
 namespace SilverStripe\UserGuide\Task;
 
+use DOMDocument;
 use Parsedown;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -13,10 +14,10 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\UserGuide\Model\UserGuide;
 
-class LinkUserGuides extends BuildTask
+class TransformUserGuides extends BuildTask
 {
-    private static $segment = 'LinkUserGuides';
-    protected $title = 'Creates record links to user guides';
+    private static $segment = 'TransformUserGuides';
+    protected $title = 'Transform user guides';
 
     public function run($request)
     {
@@ -64,12 +65,14 @@ class LinkUserGuides extends BuildTask
             }
 
             if ($fileType === 'md') {
-                // prototyping - not sure if a meta data approach is a good idea.
+                // prototyping
+                // Not sure if this is a good idea
                 if (strstr($fileContents, '@UserDocs_Skip')) {
                     $fileContents = str_replace('@UserDocs_Skip=', '', $fileContents);
                     $this->log('@UserDocs_Skip found - skip ' . $file);
                     continue;
                 }
+
                 $derivedClass = trim(str_replace('@UserDocs_Class_Name=', '', strstr($fileContents, '@UserDocs_Class_Name=')));
                 if ($derivedClass) {
                     if (ClassInfo::exists($derivedClass)) {
@@ -83,6 +86,21 @@ class LinkUserGuides extends BuildTask
                     ->setSafeMode(true)
                     ->setBreaksEnabled(true)
                     ->text($fileContents);
+            }
+
+            // transform any urls that do not have an https:// we can assume they are relative links
+            $htmlDocument = new DOMDocument();
+            $htmlDocument->loadHTML($htmlContent);
+            $links = $htmlDocument->getElementsByTagName('a');
+            $siteURL = Director::absoluteBaseURL();
+
+            foreach ($links as $link) {
+                $linkHref = $link->getAttribute("href");
+
+                if (str_contains($linkHref, 'http') == false) {
+                    $link->setAttribute('href', $siteURL . 'userguides/' . $linkHref);
+                    $this->log('changed: ' . $linkHref . ' to: ' . $link->getAttribute("href"));
+                }
             }
 
             $guide->Content = $htmlContent;

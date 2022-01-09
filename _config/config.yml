@@ -10,3 +10,13 @@ SilverStripe\Admin\LeftAndMain:
     - 'silverstripe/userguide: client/dist/js/bundle.js'
   extra_requirements_css:
     - 'silverstripe/userguide: client/dist/styles/bundle.css'
+
+---
+Name: UserGuideRoutes
+After:
+  - '#rootroutes'
+  - '#coreroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'userguides/$Action': 'SilverStripe\UserGuide\Controller\UserGuideController'
