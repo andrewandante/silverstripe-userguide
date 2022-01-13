@@ -24,11 +24,6 @@ class UserGuideExtension extends DataExtension
                         $userguide->PreNotes
                     )->setRows(10),
                     HTMLEditorField::create(
-                        'UserGuideContent',
-                        'User Guide Content',
-                        $userguide->Content
-                    )->performReadonlyTransformation(),
-                    HTMLEditorField::create(
                         'UserGuidePostContent',
                         'User Guide Post-Content',
                         $userguide->PostNotes
@@ -38,4 +33,5 @@ class UserGuideExtension extends DataExtension
         }
         return $fields;
     }
+
 }
