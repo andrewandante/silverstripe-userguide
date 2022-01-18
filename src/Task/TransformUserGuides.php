@@ -14,10 +14,10 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\UserGuide\Model\UserGuide;
 
-class TransformUserGuides extends BuildTask
+class LinkUserGuides extends BuildTask
 {
-    private static $segment = 'TransformUserGuides';
-    protected $title = 'Transform user guides';
+    private static $segment = 'LinkUserGuides';
+    protected $title = 'Creates record links to user guides';
 
     public function run($request)
     {
@@ -97,12 +97,23 @@ class TransformUserGuides extends BuildTask
             foreach ($links as $link) {
                 $linkHref = $link->getAttribute("href");
 
-                if (str_contains($linkHref, 'http') == false) {
-                    $link->setAttribute('href', $siteURL . 'userguides/' . $linkHref);
+                if ($this->isRelativeLink($linkHref) || !$this->isJumpToLink($linkHref)) {
+                    $link->setAttribute('href', $siteURL . 'userguides?filePath=' . $linkHref);
                     $this->log('changed: ' . $linkHref . ' to: ' . $link->getAttribute("href"));
                 }
             }
 
+            $images = $htmlDocument->getElementsByTagName('img');
+            foreach ($images as $image) {
+                $imageSRC = $image->getAttribute("src");
+
+                if (str_contains($imageSRC, 'http') == false) {
+                    $image->setAttribute('src', $siteURL . 'userguides?streamInImage=' . $imageSRC);
+                    $this->log('changed: ' . $imageSRC . ' to: ' . $link->getAttribute("src"));
+                }
+            }
+
+            $htmlContent = $htmlDocument->saveHTML();
             $guide->Content = $htmlContent;
             $guide->write();
             $this->log($file . ' was written');
@@ -111,5 +122,14 @@ class TransformUserGuides extends BuildTask
 
     protected function log($message) {
         echo $message . (Director::is_cli() ? PHP_EOL : '<br>');
+    }
+
+    // We determine a relative link to either contain 'http'
+    protected function isRelativeLink($linkHref) {
+        return str_contains($linkHref, 'http') == false;
+    }
+
+    protected function isJumpToLink($linkHref) {
+        return substr($linkHref, 0, 1) === '#';
     }
 }
