@@ -1,67 +1,61 @@
 <?php
 
-namespace SilverStripe\UserGuide\Controller;
+namespace SilverStripe\UserGuide\Extension;
 
-use SilverStripe\CMS\Controllers\CMSMain;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Extension;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\UserGuide\Model\UserGuide;
+use SilverStripe\UserGuide\Controller\CMSUserGuideController;
 use Page;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
 
-class CMSUserGuideController extends CMSMain
+class CMSMainExtension extends Extension
 {
-    private static string $url_segment = 'pages/guide';
 
-    private static string $url_rule = '/$Action/$ID/$OtherID';
-
-    private static int $url_priority = 42;
-
-    private static string $required_permission_codes = 'CMS_ACCESS_CMSMain';
-
-    private static $allowed_actions = [
-        'markdown',
-    ];
-
-
-    public function getEditForm($id = null, $fields = null)
+    public function LinkPageUserGuide()
     {
-        $id = $this->currentPageID();
-        $page = Page::get_by_id($id);
-        $userguides = UserGuide::get()->filter('DerivedClass', $page->ClassName);
-        $fieldList = FieldList::create(
-            GridField::create('Userguides', 'User guides', $userguides, GridFieldConfig_RecordViewer::create())
-        );
-        return parent::getEditForm($id, $fieldList);
+        $owner = $this->getOwner();
+        if ($id = $owner->currentPageID()) {
+            return $owner->LinkWithSearch(
+                Controller::join_links(CMSUserGuideController::singleton()->Link('show'), $id)
+            );
+        } else {
+            return null;
+        }
     }
 
-    public function getTabIdentifier(): string
+    public function IsUserGuideController()
     {
-        return 'guide';
+        return get_class($this->getOwner()) === CMSUserGuideController::class;
     }
 
-    /**
-     * @see LeftAndMain::show()
-     * @return HTTPResponse
-     * @throws HTTPResponse_Exception
-     */
-    public function markdown(HTTPRequest $request)
+    public function ShowUserGuide()
     {
-        if ($request->param('ID')) {
-            $this->setCurrentPageID($request->param('ID'));
+        return HTMLEditorField::create('UserGuideContent', 'User Guide Content', $this->getUserGuideContent())
+            ->performReadonlyTransformation();
+    }
+
+    public function getUserGuideContent()
+    {
+        $pageID = $this->getOwner()->currentPageID();
+
+        if (!$pageID) {
+            return null;
         }
 
-        $pageID = $this->currentPageID();
-        $response = $this->getResponse();
-        $response->addHeader('Content-Type', 'application/json');
-        $response->setBody(json_encode([
-            'ID' => $pageID,
-            'Content' => $this->getUserGuideContent(),
-        ]));
+        $page = Page::get()->find('ID', $pageID);
 
-        return $response;
+        if (!$page) {
+            return null;
+        }
+
+        $userguide = UserGuide::get()->find('DerivedClass', $page->ClassName);
+
+        if (!$userguide) {
+            return null;
+        }
+
+        return $userguide->Content;
     }
+
 }

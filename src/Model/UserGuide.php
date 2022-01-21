@@ -9,6 +9,7 @@ class UserGuide extends DataObject
     private static $table_name = 'UserGuide';
 
     private static $db = [
+        'Type' => 'Varchar',
         'Title' => 'Varchar',
         'PreNotes' => 'HTMLText',
         'Content' => 'HTMLText',
@@ -18,6 +19,7 @@ class UserGuide extends DataObject
     ];
 
     private static $summary_fields = [
+        'Type' => 'File type',
         'Title' => 'File Name',
         'DerivedClass' => 'Class',
     ];

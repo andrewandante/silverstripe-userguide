@@ -21,10 +21,11 @@ class LinkUserGuides extends BuildTask
 
     public function run($request)
     {
-        $guides = UserGuide::get();
-        $configDir = Config::inst()->get('UserGuide', 'directory') ?: '/docs/userguides/';
+        // config stuff
+        $defaultFileExtensions = ['md', 'html', 'pdf'];
         $guideDirectory = BASE_PATH . $configDir;
-
+        $configDir = Config::inst()->get('SilverStripe\UserGuide', 'directory') ?: '/docs/userguides/';
+        $allowedFileExtensions = Config::inst()->get('SilverStripe\UserGuide', 'allowed_file_extensions') ?: $defaultFileExtensions;
 
         if (!is_dir($guideDirectory)) {
             $this->log($configDir . ' does not exist - no user docs found');
@@ -34,10 +35,17 @@ class LinkUserGuides extends BuildTask
         // Find all .md files in the Guide Directory
         $directoryIterator = new RecursiveDirectoryIterator($guideDirectory);
         $iterator = new RecursiveIteratorIterator($directoryIterator);
-        $files = new RegexIterator($iterator, '/^.*\.(md|html)$/i', RecursiveRegexIterator::GET_MATCH);
+        $files = new RegexIterator($iterator, '/^.*\.(' . implode('|', $allowedFileExtensions) . ')$/i', RecursiveRegexIterator::GET_MATCH);
+
+        $guides = UserGuide::get();
 
         foreach ($files as $file) {
             $fileType = pathinfo($file[0], PATHINFO_EXTENSION);
+
+            // only support these types of files
+            if(!in_array($fileType, $defaultFileExtensions)) {
+                return;
+            }
 
             $file = $file[0];
             $guide = $guides->find('MarkdownPath', $file);
@@ -45,6 +53,7 @@ class LinkUserGuides extends BuildTask
             if (is_null($guide)) {
                 $guide = UserGuide::create();
                 $guide->Title = basename($file);
+                $guide->Type = $fileType;
                 $guide->MarkdownPath = $file;
                 // Attempt to derive class from directory structure a la templates
                 $classCandidate = str_replace(
@@ -88,33 +97,37 @@ class LinkUserGuides extends BuildTask
                     ->text($fileContents);
             }
 
-            // transform any urls that do not have an https:// we can assume they are relative links
-            $htmlDocument = new DOMDocument();
-            $htmlDocument->loadHTML($htmlContent);
-            $links = $htmlDocument->getElementsByTagName('a');
-            $siteURL = Director::absoluteBaseURL();
 
-            foreach ($links as $link) {
-                $linkHref = $link->getAttribute("href");
+            if($fileType === 'md' || $fileType === 'html') {
+                // transform any urls that do not have an https:// we can assume they are relative links
+                $htmlDocument = new DOMDocument();
+                $htmlDocument->loadHTML($htmlContent);
+                $links = $htmlDocument->getElementsByTagName('a');
+                $siteURL = Director::absoluteBaseURL();
 
-                if ($this->isRelativeLink($linkHref) || !$this->isJumpToLink($linkHref)) {
-                    $link->setAttribute('href', $siteURL . 'userguides?filePath=' . $linkHref);
-                    $this->log('changed: ' . $linkHref . ' to: ' . $link->getAttribute("href"));
+                foreach ($links as $link) {
+                    $linkHref = $link->getAttribute("href");
+
+                    if ($this->isRelativeLink($linkHref) || !$this->isJumpToLink($linkHref)) {
+                        $link->setAttribute('href', $siteURL . 'userguides?filePath=' . $linkHref);
+                        $this->log('changed: ' . $linkHref . ' to: ' . $link->getAttribute("href"));
+                    }
                 }
+
+                $images = $htmlDocument->getElementsByTagName('img');
+                foreach ($images as $image) {
+                    $imageSRC = $image->getAttribute("src");
+
+                    if (str_contains($imageSRC, 'http') == false) {
+                        $image->setAttribute('src', $siteURL . 'userguides?streamInImage=' . $imageSRC);
+                        $this->log('changed: ' . $imageSRC . ' to: ' . $link->getAttribute("src"));
+                    }
+                }
+
+                $htmlContent = $htmlDocument->saveHTML();
+                $guide->Content = $htmlContent;
             }
 
-            $images = $htmlDocument->getElementsByTagName('img');
-            foreach ($images as $image) {
-                $imageSRC = $image->getAttribute("src");
-
-                if (str_contains($imageSRC, 'http') == false) {
-                    $image->setAttribute('src', $siteURL . 'userguides?streamInImage=' . $imageSRC);
-                    $this->log('changed: ' . $imageSRC . ' to: ' . $link->getAttribute("src"));
-                }
-            }
-
-            $htmlContent = $htmlDocument->saveHTML();
-            $guide->Content = $htmlContent;
             $guide->write();
             $this->log($file . ' was written');
         }

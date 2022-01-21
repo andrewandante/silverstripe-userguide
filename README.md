@@ -13,10 +13,24 @@ composer require silverstripe/userguide
 ```
 
 ## Usage
-```
+```yml
 Page:
   extensions:
     - SilverStripe\UserGuide\Extension\UserGuideExtension
+```
+
+Config options:
+- by default the module looks for documents in the '/docs/' folder. You can change this
+```yml
+SilverStripe\UserGuide:
+  directory: '/docs/'
+```
+- by default the module supports `md, html, pdf` file extensions, you can restrict it by
+```yml
+SilverStripe\UserGuide:
+    allowed_file_extensions:
+        - pdf
+        - md
 ```
 
 ## License
