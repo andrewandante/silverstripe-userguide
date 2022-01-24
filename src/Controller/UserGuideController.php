@@ -17,14 +17,17 @@ class UserGuideController extends Controller
         'streamInImage' => 'index',
     ];
 
-    public function index(HTTPRequest $request) {
+    public function index(HTTPRequest $request)
+    {
+        // This ensures the images etc are protected by login
         if (!Security::getCurrentUser()) {
             return Security::permissionFailure();
         }
 
+        // @TODO do something with this?
+        //  $filePath = $request->getVar('filePath');
 
-
-        $filePath = $request->getVar('filePath');
+        // Proxy for images in markdown files
         $streamInImage = $request->getVar('streamInImage');
         if (file_exists(BASE_PATH . $streamInImage)) {
             return file_get_contents(BASE_PATH . $streamInImage);

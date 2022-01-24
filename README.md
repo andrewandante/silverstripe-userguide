@@ -20,17 +20,20 @@ Page:
 ```
 
 Config options:
-- by default the module looks for documents in the '/docs/' folder. You can change this
+- by default the module looks for documents in the '/docs/userguides' folder. You can change this like so:
+
 ```yml
 SilverStripe\UserGuide:
-  directory: '/docs/'
+  directory: '/docs/some-other-folder'
 ```
-- by default the module supports `md, html, pdf` file extensions, you can restrict it by
+
+- by default the module supports `md, html, pdf` file extensions, you can update it like so:
+
 ```yml
 SilverStripe\UserGuide:
-    allowed_file_extensions:
-        - pdf
-        - md
+  allowed_file_extensions:
+    - pdf
+    - md
 ```
 
 ## License

@@ -14,7 +14,7 @@ class UserGuide extends DataObject
         'PreNotes' => 'HTMLText',
         'Content' => 'HTMLText',
         'PostNotes' => 'HTMLText',
-        'MarkdownPath' => 'Varchar',
+        'MarkdownPath' => 'Varchar', //@TODO update to FilePath as we are doing more than just .md now
         'DerivedClass' => 'Varchar',
     ];
 

@@ -67,7 +67,6 @@ class CMSUserGuideController extends CMSMain
         $pageID = $this->currentPageID();
         $response = $this->getResponse();
         $response->addHeader('Content-Type', 'application/json');
-        // $response->addHeader('X-Reload', true);
         $response->setBody(json_encode([
             'ID' => $pageID,
             'Content' => $this->getUserGuideContent(),
@@ -76,6 +75,14 @@ class CMSUserGuideController extends CMSMain
         return $response;
     }
 
+    /**
+     * Here we are overriding the show method in order to force a page reload if
+     * ugid is set in the URL. It would be better to just trigger a reload of
+     * the preview panel
+     *
+     * @param $request
+     * @return mixed
+     */
     public function show($request)
     {
         $response = parent::show($request);

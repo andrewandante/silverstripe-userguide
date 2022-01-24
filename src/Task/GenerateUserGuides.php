@@ -3,10 +3,7 @@
 namespace SilverStripe\UserGuide\Task;
 
 use DOMDocument;
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Extension\CommonMark\Node\Inline\Image;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
-use Parsedown;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
@@ -17,9 +14,10 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\UserGuide\Model\UserGuide;
 
-class LinkUserGuides extends BuildTask
+class GenerateUserGuides extends BuildTask
 {
-    private static $segment = 'LinkUserGuides';
+    private static $segment = 'GenerateUserGuides';
+
     protected $title = 'Creates record links to user guides';
 
     public function run($request)
@@ -27,6 +25,7 @@ class LinkUserGuides extends BuildTask
 
         $configDir = Config::inst()->get('SilverStripe\UserGuide', 'directory');
         $guideDirectory = BASE_PATH . $configDir;
+        // @TODO handle PDFs
         $allowedFileExtensions = Config::inst()->get('SilverStripe\UserGuide', 'allowed_file_extensions');
 
         if (!is_dir($guideDirectory)) {
@@ -37,7 +36,11 @@ class LinkUserGuides extends BuildTask
         // Find all .md files in the Guide Directory
         $directoryIterator = new RecursiveDirectoryIterator($guideDirectory);
         $iterator = new RecursiveIteratorIterator($directoryIterator);
-        $files = new RegexIterator($iterator, '/^.*\.(' . implode('|', $allowedFileExtensions) . ')$/i', RecursiveRegexIterator::GET_MATCH);
+        $files = new RegexIterator(
+            $iterator,
+            '/^.*\.(' . implode('|', $allowedFileExtensions) . ')$/i',
+            RecursiveRegexIterator::GET_MATCH
+        );
 
         $guides = UserGuide::get();
 
@@ -52,6 +55,7 @@ class LinkUserGuides extends BuildTask
             $file = $file[0];
             $guide = $guides->find('MarkdownPath', $file);
 
+            // @TODO make this work for non-markdown files
             if (is_null($guide)) {
                 $guide = UserGuide::create();
                 $guide->Title = basename($file);
@@ -84,6 +88,7 @@ class LinkUserGuides extends BuildTask
                     continue;
                 }
 
+                // @TODO - this only works if the annotation is at the bottom of the file, fix that
                 $derivedClass = trim(str_replace('@UserDocs_Class_Name=', '', strstr($fileContents, '@UserDocs_Class_Name=')));
                 if ($derivedClass) {
                     if (ClassInfo::exists($derivedClass)) {
@@ -92,6 +97,8 @@ class LinkUserGuides extends BuildTask
                     }
                 }
 
+                // @TODO use something like Injector::inst()->get(UserGuideMarkdownConverter::class) to allow
+                // injection and configuration
                 $converter = new GithubFlavoredMarkdownConverter();
                 $htmlContent = $converter->convert($fileContents)->getContent();
             }
@@ -132,16 +139,19 @@ class LinkUserGuides extends BuildTask
         }
     }
 
-    protected function log($message) {
+    protected function log($message)
+    {
         echo $message . (Director::is_cli() ? PHP_EOL : '<br>');
     }
 
     // We determine a relative link to either contain 'http'
-    protected function isRelativeLink($linkHref) {
+    protected function isRelativeLink($linkHref)
+    {
         return str_contains($linkHref, 'http') == false;
     }
 
-    protected function isJumpToLink($linkHref) {
+    protected function isJumpToLink($linkHref)
+    {
         return substr($linkHref, 0, 1) === '#';
     }
 }

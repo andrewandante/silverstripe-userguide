@@ -37,7 +37,7 @@ class CMSMainExtension extends Extension
 
     public function getUserGuideContent()
     {
-        $UID = $this->getOwner()->getRequest()->getVar('ugid');
+        $ugid = $this->getOwner()->getRequest()->getVar('ugid');
         $pageID = $this->getOwner()->currentPageID();
 
         if (!$pageID) {
@@ -49,21 +49,18 @@ class CMSMainExtension extends Extension
         if (!$page) {
             return null;
         }
-        $defaultUserguide = UserGuide::get()->find('DerivedClass', $page->ClassName);
-        $userguide = null;
-        if ($UID != null) {
-            $userguide = UserGuide::get_by_id($UID);
+
+        if ($ugid !== null) {
+            $userguide = UserGuide::get_by_id($ugid);
 
             if ($userguide->exists() && $userguide->DerivedClass === $page->ClassName) {
                 return $userguide->Content;
             }
         }
 
-        if (!$defaultUserguide) {
-            return null;
-        } else {
-            return $defaultUserguide->Content;
-        }
+        $defaultUserguide = UserGuide::get()->find('DerivedClass', $page->ClassName);
+
+        return $defaultUserguide->exists() ? $defaultUserguide->Content : null;
     }
 
 }
