@@ -8,9 +8,13 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\UserGuide\Model\UserGuide;
 use Page;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
+use SilverStripe\Forms\GridField\LoadUserGuide;
+use SilverStripe\UserGuide\GridField\GridFieldLoadUserGuide;
+use SilverStripe\UserGuide\GridField\UserGuideViewer;
 
 class CMSUserGuideController extends CMSMain
 {
@@ -33,7 +37,12 @@ class CMSUserGuideController extends CMSMain
         $page = Page::get_by_id($id);
         $userguides = UserGuide::get()->filter('DerivedClass', $page->ClassName);
         $fieldList = FieldList::create(
-            GridField::create('Userguides', 'User guides', $userguides, GridFieldConfig_RecordViewer::create())
+            GridField::create(
+                'Userguides',
+                'User guides',
+                $userguides,
+                UserGuideViewer::create()
+            )
         );
         return parent::getEditForm($id, $fieldList);
     }
@@ -57,6 +66,7 @@ class CMSUserGuideController extends CMSMain
         $pageID = $this->currentPageID();
         $response = $this->getResponse();
         $response->addHeader('Content-Type', 'application/json');
+        // $response->addHeader('X-Reload', true);
         $response->setBody(json_encode([
             'ID' => $pageID,
             'Content' => $this->getUserGuideContent(),
