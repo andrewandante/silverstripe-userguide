@@ -88,19 +88,12 @@ class LinkUserGuides extends BuildTask
                 if ($derivedClass) {
                     if (ClassInfo::exists($derivedClass)) {
                         $guide->DerivedClass = $derivedClass;
+                        $fileContents = str_replace('@UserDocs_Class_Name=' . $derivedClass, '', $fileContents);
                     }
-
-                    $fileContents = str_replace('@UserDocs_Class_Name=' . $derivedClass, '', $fileContents);
                 }
 
-                $converter = new GithubFlavoredMarkdownConverter([
-                    'default_attributes' => [
-                        Image::class => [
-                            'class' => 'img-max-width',
-                        ],
-                    ],
-                ]);
-                $htmlContent = $converter->convert($fileContents);
+                $converter = new GithubFlavoredMarkdownConverter();
+                $htmlContent = $converter->convert($fileContents)->getContent();
             }
 
 

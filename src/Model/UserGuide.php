@@ -40,7 +40,7 @@ class UserGuide extends DataObject
             'DerivedClass',
         ]);
 
-        $fields->dataFieldByName('Content')->addExtraClass('img-max-width');
+        $fields->dataFieldByName('Content')->addExtraClass('img-max-width table-borders');
 
         return $fields;
     }
