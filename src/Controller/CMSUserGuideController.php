@@ -28,6 +28,7 @@ class CMSUserGuideController extends CMSMain
 
     private static $allowed_actions = [
         'markdown',
+        'show',
     ];
 
 
@@ -72,6 +73,16 @@ class CMSUserGuideController extends CMSMain
             'Content' => $this->getUserGuideContent(),
         ]));
 
+        return $response;
+    }
+
+    public function show($request)
+    {
+        $response = parent::show($request);
+        if ($request->getVar('ugid')) {
+            $response->addHeader('X-Reload', true);
+            $response->addHeader('X-ControllerURL', $request->getURL(true));
+        }
         return $response;
     }
 }
