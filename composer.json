@@ -11,7 +11,8 @@
     "require": {
         "silverstripe/framework": "^4",
         "silverstripe/admin": "^1.0",
-        "erusev/parsedown": "^1.7"
+        "league/commonmark": "^2.2",
+        "ext-dom": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7",

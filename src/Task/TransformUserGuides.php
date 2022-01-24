@@ -3,6 +3,9 @@
 namespace SilverStripe\UserGuide\Task;
 
 use DOMDocument;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Extension\CommonMark\Node\Inline\Image;
+use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Parsedown;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -90,14 +93,18 @@ class LinkUserGuides extends BuildTask
                     $fileContents = str_replace('@UserDocs_Class_Name=' . $derivedClass, '', $fileContents);
                 }
 
-                $htmlContent = Parsedown::instance()
-                    ->setSafeMode(true)
-                    ->setBreaksEnabled(true)
-                    ->text($fileContents);
+                $converter = new GithubFlavoredMarkdownConverter([
+                    'default_attributes' => [
+                        Image::class => [
+                            'class' => 'img-max-width',
+                        ],
+                    ],
+                ]);
+                $htmlContent = $converter->convert($fileContents);
             }
 
 
-            if($fileType === 'md' || $fileType === 'html') {
+            if ($fileType === 'md' || $fileType === 'html') {
                 // transform any urls that do not have an https:// we can assume they are relative links
                 $htmlDocument = new DOMDocument();
                 $htmlDocument->loadHTML($htmlContent);
