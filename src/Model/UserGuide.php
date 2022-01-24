@@ -40,6 +40,8 @@ class UserGuide extends DataObject
             'DerivedClass',
         ]);
 
+        $fields->dataFieldByName('Content')->addExtraClass('img-max-width');
+
         return $fields;
     }
 }

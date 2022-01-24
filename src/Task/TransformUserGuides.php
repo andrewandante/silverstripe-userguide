@@ -21,11 +21,10 @@ class LinkUserGuides extends BuildTask
 
     public function run($request)
     {
-        // config stuff
-        $defaultFileExtensions = ['md', 'html', 'pdf'];
+
+        $configDir = Config::inst()->get('SilverStripe\UserGuide', 'directory');
         $guideDirectory = BASE_PATH . $configDir;
-        $configDir = Config::inst()->get('SilverStripe\UserGuide', 'directory') ?: '/docs/userguides/';
-        $allowedFileExtensions = Config::inst()->get('SilverStripe\UserGuide', 'allowed_file_extensions') ?: $defaultFileExtensions;
+        $allowedFileExtensions = Config::inst()->get('SilverStripe\UserGuide', 'allowed_file_extensions');
 
         if (!is_dir($guideDirectory)) {
             $this->log($configDir . ' does not exist - no user docs found');
@@ -43,7 +42,7 @@ class LinkUserGuides extends BuildTask
             $fileType = pathinfo($file[0], PATHINFO_EXTENSION);
 
             // only support these types of files
-            if(!in_array($fileType, $defaultFileExtensions)) {
+            if(!in_array($fileType, $allowedFileExtensions)) {
                 return;
             }
 
@@ -120,7 +119,7 @@ class LinkUserGuides extends BuildTask
 
                     if (str_contains($imageSRC, 'http') == false) {
                         $image->setAttribute('src', $siteURL . 'userguides?streamInImage=' . $imageSRC);
-                        $this->log('changed: ' . $imageSRC . ' to: ' . $link->getAttribute("src"));
+                        $this->log('changed: ' . $imageSRC . ' to: ' . $image->getAttribute("src"));
                     }
                 }
 
