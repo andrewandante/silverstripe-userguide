@@ -33,5 +33,4 @@ class UserGuideController extends Controller
             return file_get_contents(BASE_PATH . $streamInImage);
         }
     }
-
 }

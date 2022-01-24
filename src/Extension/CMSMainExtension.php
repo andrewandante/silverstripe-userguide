@@ -62,5 +62,4 @@ class CMSMainExtension extends Extension
 
         return $defaultUserguide->exists() ? $defaultUserguide->Content : null;
     }
-
 }

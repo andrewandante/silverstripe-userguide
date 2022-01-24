@@ -21,7 +21,7 @@ use SilverStripe\View\SSViewer;
  * disabled by default and intended for use in readonly {@link GridField}
  * instances.
  */
-class UserGuideButton implements GridField_ColumnProvider, GridField_ActionMenuLink
+class UserGuideViewButton implements GridField_ColumnProvider, GridField_ActionMenuLink
 {
     /**
      * @inheritdoc
@@ -91,7 +91,8 @@ class UserGuideButton implements GridField_ColumnProvider, GridField_ActionMenuL
         return ['title' => null];
     }
 
-    private function formatURL($field, $record) {
+    private function formatURL($field, $record)
+    {
         $link = Injector::inst()->get(CMSUserGuideController::class)->Link();
         $controllerParams = Controller::curr()->getURLParams();
 

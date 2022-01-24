@@ -15,7 +15,7 @@ class UserGuideViewer extends GridFieldConfig_Base
     {
         parent::__construct($itemsPerPage);
 
-        $this->addComponent(new UserGuideButton());
+        $this->addComponent(new UserGuideViewButton());
         $this->removeComponentsByType(GridFieldFilterHeader::class);
 
         $this->extend('updateConfig');

@@ -48,7 +48,7 @@ class GenerateUserGuides extends BuildTask
             $fileType = pathinfo($file[0], PATHINFO_EXTENSION);
 
             // only support these types of files
-            if(!in_array($fileType, $allowedFileExtensions)) {
+            if (!in_array($fileType, $allowedFileExtensions)) {
                 return;
             }
 
@@ -89,7 +89,13 @@ class GenerateUserGuides extends BuildTask
                 }
 
                 // @TODO - this only works if the annotation is at the bottom of the file, fix that
-                $derivedClass = trim(str_replace('@UserDocs_Class_Name=', '', strstr($fileContents, '@UserDocs_Class_Name=')));
+                $derivedClass = trim(
+                    str_replace(
+                        '@UserDocs_Class_Name=',
+                        '',
+                        strstr($fileContents, '@UserDocs_Class_Name=')
+                    )
+                );
                 if ($derivedClass) {
                     if (ClassInfo::exists($derivedClass)) {
                         $guide->DerivedClass = $derivedClass;

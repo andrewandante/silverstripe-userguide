@@ -33,5 +33,4 @@ class UserGuideExtension extends DataExtension
         }
         return $fields;
     }
-
 }
