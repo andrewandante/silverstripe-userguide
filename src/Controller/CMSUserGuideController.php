@@ -8,12 +8,8 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\UserGuide\Model\UserGuide;
 use Page;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordViewer;
-use SilverStripe\Forms\GridField\LoadUserGuide;
-use SilverStripe\UserGuide\GridField\GridFieldLoadUserGuide;
 use SilverStripe\UserGuide\GridField\UserGuideViewer;
 
 class CMSUserGuideController extends CMSMain

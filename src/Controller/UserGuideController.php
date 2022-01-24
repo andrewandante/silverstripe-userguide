@@ -2,12 +2,9 @@
 
 namespace SilverStripe\UserGuide\Controller;
 
-use SilverStripe\Dev\Debug;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
-use SilverStripe\View\Requirements;
 
 class UserGuideController extends Controller
 {

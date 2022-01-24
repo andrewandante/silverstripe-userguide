@@ -3,8 +3,7 @@
 namespace SilverStripe\UserGuide\GridField;
 
 use SilverStripe\Forms\GridField\GridFieldConfig_Base;
-use SilverStripe\Forms\GridField\GridFieldDetailForm;
-use SilverStripe\Forms\GridField\GridFieldViewButton;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 
 /**
  * Allows viewing readonly details of individual records.

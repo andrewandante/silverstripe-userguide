@@ -2,7 +2,6 @@
 
 namespace SilverStripe\UserGuide\Extension;
 
-use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;

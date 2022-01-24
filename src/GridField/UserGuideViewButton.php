@@ -2,17 +2,12 @@
 
 namespace SilverStripe\UserGuide\GridField;
 
-use SilverStripe\CMS\Controllers\CMSMain;
-use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Forms\GridField\GridField_ActionMenuItem;
 use SilverStripe\Forms\GridField\GridField_ActionMenuLink;
 use SilverStripe\Forms\GridField\GridField_ColumnProvider;
 use SilverStripe\UserGuide\Controller\CMSUserGuideController;
-use SilverStripe\UserGuide\Model\UserGuide;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
