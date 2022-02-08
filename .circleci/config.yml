@@ -56,7 +56,7 @@ jobs:
       - run: composer silverstripe-standards
 
       # dev/build
-      - run: sudo -u vagrant vendor/bin/sake dev/build flush=1
+#      - run: sudo -u vagrant vendor/bin/sake dev/build flush=1
 
       # PHP Tests
-      - run: vendor/bin/phpunit --verbose
+#      - run: vendor/bin/phpunit --verbose

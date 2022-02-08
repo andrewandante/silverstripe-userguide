@@ -9,4 +9,21 @@ SilverStripe\Admin\LeftAndMain:
   extra_requirements_javascript:
     - 'silverstripe/userguide: client/dist/js/bundle.js'
   extra_requirements_css:
-    - 'silverstripe/userguide: client/dist/styles/bundle.css'
+    - 'silverstripe/userguide: client/dist/styles/styles.css'
+
+SilverStripe\UserGuide:
+  directory: '/docs/userguides'
+  allowed_file_extensions:
+    - md
+    - html
+    - pdf
+
+---
+Name: UserGuideRoutes
+After:
+  - '#rootroutes'
+  - '#coreroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'userguides/$Action': 'SilverStripe\UserGuide\Controller\UserGuideController'

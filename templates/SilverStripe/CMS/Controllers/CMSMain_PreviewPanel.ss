@@ -8,7 +8,7 @@
             <div class="preview-device-outer">
                 <div class="preview-device-inner">
                     <input id="userguide_toggle" type="hidden" value="$IsUserGuideController" />
-                    <div id="userguide_frame">
+                    <div id="userguide_frame" class="img-max-width table-borders">
                         $ShowUserGuide
                     </div>
                     <iframe src="about:blank" class="center" name="cms-preview-iframe"></iframe>
