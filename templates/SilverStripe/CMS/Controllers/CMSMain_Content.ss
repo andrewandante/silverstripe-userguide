@@ -25,11 +25,13 @@
                             <%t SilverStripe\\CMS\\Controllers\\CMSMain.TabHistory 'History' %>
                         </a>
                     </li>
+                    <% if $UserGuideContent %>
                     <li class="nav-item content-listview<% if $TabIdentifier == 'guide' %> ui-tabs-active<% end_if %>">
                         <a href="$LinkPageUserGuide" class="nav-link cms-panel-link" title="Form_EditForm" data-href="$LinkPageUserGuide">
                             User Guide
                         </a>
                     </li>
+                    <% end_if %>
                 </ul>
             </div>
         </div>

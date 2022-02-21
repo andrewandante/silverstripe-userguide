@@ -60,6 +60,6 @@ class CMSMainExtension extends Extension
 
         $defaultUserguide = UserGuide::get()->find('DerivedClass', $page->ClassName);
 
-        return $defaultUserguide->exists() ? $defaultUserguide->Content : null;
+        return $defaultUserguide && $defaultUserguide->exists() ? $defaultUserguide->Content : null;
     }
 }

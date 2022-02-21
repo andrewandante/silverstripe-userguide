@@ -33,15 +33,17 @@ class CMSUserGuideController extends CMSMain
         $id = $this->currentPageID();
         $page = Page::get_by_id($id);
         $userguides = UserGuide::get()->filter('DerivedClass', $page->ClassName);
-        $fieldList = FieldList::create(
-            GridField::create(
-                'Userguides',
-                'User guides',
-                $userguides,
-                UserGuideViewer::create()
-            )
-        );
-        return parent::getEditForm($id, $fieldList);
+        if ($userguides && $userguides->count() > 0) {
+            $fields = FieldList::create(
+                GridField::create(
+                    'Userguides',
+                    'User guides',
+                    $userguides,
+                    UserGuideViewer::create()
+                )
+            );
+        }
+        return parent::getEditForm($id, $fields);
     }
 
     public function getTabIdentifier(): string

@@ -23,6 +23,11 @@ class GenerateUserGuides extends BuildTask
     public function run($request)
     {
 
+        /** @var UserGuide $existingUserguide */
+        foreach (UserGuide::get() as $existingUserguide) {
+            $existingUserguide->delete();
+        }
+
         $configDir = Config::inst()->get('SilverStripe\UserGuide', 'directory');
         $guideDirectory = BASE_PATH . $configDir;
         // @TODO handle PDFs
